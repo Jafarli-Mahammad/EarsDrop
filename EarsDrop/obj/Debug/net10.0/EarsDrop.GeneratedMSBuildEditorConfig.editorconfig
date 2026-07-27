@@ -9,7 +9,7 @@ build_property.AvaloniaNameGeneratorAttachDevTools = true
 build_property.AvaloniaUseCompiledBindingsByDefault = true
 build_property.AvaloniaMainPackageVersion = 12.1.0
 build_property.AvaloniaPreviewerNetCoreToolPath = /home/mahammadjafarli/.nuget/packages/avalonia/12.1.0/buildTransitive//../tools/net8.0/designer/Avalonia.Designer.HostApp.dll
-build_property.AvaloniaResourcePaths = /home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Assets/avalonia-logo.ico
+build_property.AvaloniaResourcePaths = /home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Assets/avalonia-logo.ico,/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/App.axaml,/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Controls/DownloadCard.axaml,/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Controls/ProgressRing.axaml,/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Controls/Toolbar.axaml,/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Resources/Styles/Theme.axaml,/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Views/AboutView.axaml,/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Views/DownloadHistoryView.axaml,/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Views/MainWindow.axaml,/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Views/QueueView.axaml,/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Views/SettingsView.axaml
 build_property.MvvmToolkitEnableINotifyPropertyChangingSupport = true
 build_property._MvvmToolkitIsUsingWindowsRuntimePack = false
 build_property.CsWinRTComponent = 
@@ -35,5 +35,29 @@ build_property.EnableCodeStyleSeverity =
 [/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Controls/DownloadCard.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Controls/ProgressRing.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Controls/Toolbar.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Resources/Styles/Theme.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Views/AboutView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Views/DownloadHistoryView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Views/MainWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Views/QueueView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/Views/SettingsView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

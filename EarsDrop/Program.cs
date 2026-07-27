@@ -1,9 +1,13 @@
-﻿using Avalonia;
-using System;
+﻿global using System;
+global using System.Linq;
+global using System.Threading;
+global using System.Threading.Tasks;
+
+using Avalonia;
 
 namespace EarsDrop;
 
-sealed class Program
+internal sealed class Program
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized

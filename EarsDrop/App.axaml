@@ -1,15 +1,24 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="EarsDrop.App"
-             xmlns:local="using:EarsDrop"
-             RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-
-    <Application.DataTemplates>
-        <local:ViewLocator />
-    </Application.DataTemplates>
-
-    <Application.Styles>
-        <FluentTheme />
-    </Application.Styles>
+             RequestedThemeVariant="Dark">
+  <Application.Styles>
+    <FluentTheme DensityStyle="Compact" />
+    <StyleInclude Source="avares://EarsDrop/Resources/Styles/Theme.axaml" />
+  </Application.Styles>
+  <TrayIcon.Icons>
+    <TrayIcons>
+      <TrayIcon Icon="/Assets/avalonia-logo.ico" ToolTipText="EarsDrop">
+        <TrayIcon.Menu><NativeMenu>
+          <NativeMenuItem Header="Open" Click="OpenFromTray" />
+          <NativeMenuItemSeparator />
+          <NativeMenuItem Header="Pause Downloads" Click="PauseDownloads" />
+          <NativeMenuItem Header="Resume Downloads" Click="ResumeDownloads" />
+          <NativeMenuItem Header="Settings" Click="SettingsFromTray" />
+          <NativeMenuItemSeparator />
+          <NativeMenuItem Header="Exit" Click="ExitFromTray" />
+        </NativeMenu></TrayIcon.Menu>
+      </TrayIcon>
+    </TrayIcons>
+  </TrayIcon.Icons>
 </Application>

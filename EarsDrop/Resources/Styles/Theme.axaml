@@ -1,0 +1,12 @@
+<Styles xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Styles.Resources>
+    <Color x:Key="AppBgColor">#101116</Color><Color x:Key="SidebarColor">#171820</Color><Color x:Key="SurfaceColor">#1D1F29</Color><Color x:Key="MutedColor">#2A2D3A</Color><Color x:Key="AccentColor">#8B5CF6</Color>
+    <SolidColorBrush x:Key="AppBackground" Color="{DynamicResource AppBgColor}"/><SolidColorBrush x:Key="SidebarBackground" Color="{DynamicResource SidebarColor}"/><SolidColorBrush x:Key="CardMuted" Color="{DynamicResource MutedColor}"/><SolidColorBrush x:Key="AccentBrush" Color="{DynamicResource AccentColor}"/>
+  </Styles.Resources>
+  <Style Selector="TextBox, ComboBox, NumericUpDown"><Setter Property="CornerRadius" Value="9"/><Setter Property="MinHeight" Value="40"/></Style>
+  <Style Selector="Button"><Setter Property="CornerRadius" Value="9"/><Setter Property="Padding" Value="15,9"/></Style>
+  <Style Selector="Button.nav"><Setter Property="HorizontalContentAlignment" Value="Left"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/></Style>
+  <Style Selector="Button.accent"><Setter Property="Background" Value="{DynamicResource AccentBrush}"/><Setter Property="Foreground" Value="White"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
+  <Style Selector="Border.surface"><Setter Property="Background" Value="{DynamicResource SurfaceColor}"/><Setter Property="CornerRadius" Value="14"/></Style>
+  <Style Selector="ProgressBar"><Setter Property="Height" Value="5"/><Setter Property="CornerRadius" Value="3"/></Style>
+</Styles>

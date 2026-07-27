@@ -1,0 +1,1 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="EarsDrop.Controls.Toolbar"><Border Padding="12" Background="Transparent"><ContentPresenter Content="{Binding Content, RelativeSource={RelativeSource AncestorType=UserControl}}"/></Border></UserControl>

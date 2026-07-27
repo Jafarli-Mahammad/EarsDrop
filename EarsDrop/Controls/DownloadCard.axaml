@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:vm="using:EarsDrop.ViewModels" xmlns:views="using:EarsDrop.Views" x:Class="EarsDrop.Controls.DownloadCard" x:DataType="vm:DownloadCardViewModel">
+  <Border Classes="surface" Padding="16" Margin="0,0,0,10">
+    <Grid ColumnDefinitions="64,*,Auto" ColumnSpacing="15">
+      <Border Width="64" Height="64" CornerRadius="12" Background="{DynamicResource CardMuted}">
+        <TextBlock Text="♫" FontSize="25" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity=".55" />
+      </Border>
+      <StackPanel Grid.Column="1" Spacing="6">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+          <TextBlock Grid.Column="1" Text="{Binding Status}" Opacity=".65" FontSize="12" />
+        </Grid>
+        <TextBlock Text="{Binding Artist}" Opacity=".58" FontSize="13" />
+        <ProgressBar Value="{Binding Progress}" Maximum="100" />
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Text="{Binding Speed}" FontSize="12" Opacity=".62" />
+          <TextBlock Grid.Column="1" Text="{Binding Eta}" FontSize="12" Opacity=".62" />
+        </Grid>
+      </StackPanel>
+      <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Spacing="6">
+        <Button Content="Retry"
+                Command="{Binding $parent[views:QueueView].((vm:QueueViewModel)DataContext).RetryCommand}"
+                CommandParameter="{Binding}" IsVisible="{Binding IsTerminal}" />
+        <Button Content="Open"
+                Command="{Binding $parent[views:QueueView].((vm:QueueViewModel)DataContext).OpenFolderCommand}"
+                CommandParameter="{Binding}" />
+      </StackPanel>
+    </Grid>
+  </Border>
+</UserControl>

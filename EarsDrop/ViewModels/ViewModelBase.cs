@@ -1,7 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace EarsDrop.ViewModels;
 
-public abstract class ViewModelBase : ObservableObject
+public class ViewModelBase : ObservableObject
 {
 }

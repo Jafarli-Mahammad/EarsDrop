@@ -17,5 +17,9 @@ public interface IDownloadJobRepository
         CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<DownloadJob>> GetAllAsync(
-        CancellationToken cancellationToken = default);    
+        CancellationToken cancellationToken = default);
+
+    Task DeleteAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
 }

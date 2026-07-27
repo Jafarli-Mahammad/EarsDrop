@@ -1,22 +1,22 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:EarsDrop.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="EarsDrop.Views.MainWindow"
-        x:DataType="vm:MainViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="EarsDrop">
-
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainViewModel />
-    </Design.DataContext>
-
-    <TextBox Text="{Binding Greeting}"
-             HorizontalAlignment="Center"
-             VerticalAlignment="Center" />
-
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:vm="using:EarsDrop.ViewModels" xmlns:views="using:EarsDrop.Views" x:Class="EarsDrop.Views.MainWindow" x:DataType="vm:MainViewModel" Width="1180" Height="760" MinWidth="900" MinHeight="600" Title="EarsDrop" Background="{DynamicResource AppBackground}">
+  <Window.DataTemplates>
+    <DataTemplate DataType="vm:QueueViewModel"><views:QueueView DataContext="{Binding}"/></DataTemplate>
+    <DataTemplate DataType="vm:DownloadHistoryViewModel"><views:DownloadHistoryView DataContext="{Binding}"/></DataTemplate>
+    <DataTemplate DataType="vm:SettingsViewModel"><views:SettingsView DataContext="{Binding}"/></DataTemplate>
+    <DataTemplate DataType="vm:AboutViewModel"><views:AboutView DataContext="{Binding}"/></DataTemplate>
+  </Window.DataTemplates>
+  <Grid ColumnDefinitions="224,*">
+    <Border Background="{DynamicResource SidebarBackground}" Padding="20,28">
+      <Grid RowDefinitions="Auto,*,Auto">
+        <StackPanel Spacing="7"><TextBlock Text="EarsDrop" FontSize="25" FontWeight="SemiBold"/><TextBlock Text="Your media, beautifully simple." Opacity=".55" FontSize="12"/></StackPanel>
+        <StackPanel Grid.Row="1" Margin="0,42,0,0" Spacing="6">
+          <Button Classes="nav" Command="{Binding ShowQueueCommand}"><TextBlock Text="⌄  Downloads"/></Button>
+          <Button Classes="nav" Command="{Binding ShowHistoryCommand}"><TextBlock Text="◷  History"/></Button>
+          <Button Classes="nav" Command="{Binding ShowSettingsCommand}"><TextBlock Text="⚙  Settings"/></Button>
+        </StackPanel>
+        <Button Grid.Row="2" Classes="nav" Command="{Binding ShowAboutCommand}"><TextBlock Text="ⓘ  About EarsDrop"/></Button>
+      </Grid>
+    </Border>
+    <ContentControl Grid.Column="1" Content="{Binding CurrentPage}"/>
+  </Grid>
 </Window>
