@@ -39,7 +39,15 @@ public class DownloadMediaHandler : IRequestHandler<DownloadMediaCommand, Result
     {
         _logger.LogInformation("Starting download media process for URL: {Url}", request.Url);
 
-        var uri = new Uri(request.Url);
+        // Defensive parse: although DownloadMediaValidator runs first in the pipeline, do not
+        // rely on ordering. If invoked directly (tests / composition), fail gracefully instead
+        // of throwing an unhandled UriFormatException.
+        if (!Uri.TryCreate(request.Url, UriKind.Absolute, out var uri))
+        {
+            return Result<DownloadJobDto>.Failure(
+                Error.Custom("Download.InvalidUrl", $"The URL '{request.Url}' is not a valid absolute URI."));
+        }
+
         var platform = DetectPlatform(uri);
 
         var mediaSource = new MediaSource
@@ -72,27 +80,35 @@ public class DownloadMediaHandler : IRequestHandler<DownloadMediaCommand, Result
             await _converter.ConvertAsync(job, cancellationToken);
             await _jobRepository.UpdateAsync(job, cancellationToken);
 
-            // 3. Fetch Metadata
-            _logger.LogInformation("Job {JobId}: Fetching metadata from MusicBrainz...", job.Id);
-            job.FetchMetadata();
-            await _jobRepository.UpdateAsync(job, cancellationToken);
+            // 3. Build metadata from yt-dlp probe data.
+            var metadata = BuildMetadataFromSource(job.Source, request.EnableCoverArtEmbedding);
+            var shouldEnrichFromMusicBrainz = request.EnableMetadataEnrichment || !HasEssentialMetadata(metadata);
 
-            try
+            if (shouldEnrichFromMusicBrainz)
             {
-                var metadata = await _metadataProvider.GetMetadataAsync(job.Source, cancellationToken);
-                if (metadata != null)
+                _logger.LogInformation("Job {JobId}: Fetching metadata from MusicBrainz...", job.Id);
+                job.FetchMetadata();
+                await _jobRepository.UpdateAsync(job, cancellationToken);
+
+                try
                 {
-                    job.AttachMetadata(metadata);
-                    await _jobRepository.UpdateAsync(job, cancellationToken);
+                    var enrichedMetadata = await _metadataProvider.GetMetadataAsync(job.Source, cancellationToken);
+                    metadata = MergeMetadata(metadata, enrichedMetadata, request.EnableCoverArtEmbedding);
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "Job {JobId}: Metadata fetch encountered an issue, proceeding without full tags", job.Id);
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Job {JobId}: Metadata fetch encountered an issue, proceeding with yt-dlp metadata", job.Id);
+                }
             }
 
             // 4. Write Metadata
-            if (job.Metadata != null && job.OutputPath != null)
+            if (metadata != null)
+            {
+                job.AttachMetadata(metadata);
+                await _jobRepository.UpdateAsync(job, cancellationToken);
+            }
+
+            if (request.EnableTagWriting && job.Metadata != null && job.OutputPath != null)
             {
                 _logger.LogInformation("Job {JobId}: Writing metadata tags...", job.Id);
                 await _metadataWriter.WriteMetadataAsync(job, cancellationToken);
@@ -119,6 +135,47 @@ public class DownloadMediaHandler : IRequestHandler<DownloadMediaCommand, Result
             await _jobRepository.UpdateAsync(job, CancellationToken.None);
             return Result<DownloadJobDto>.Failure(Error.Custom("Download.Failed", ex.Message));
         }
+    }
+
+    private static MediaMetadata BuildMetadataFromSource(MediaSource source, bool includeCoverArt)
+    {
+        return new MediaMetadata
+        {
+            Title = source.Title,
+            Artist = !string.IsNullOrWhiteSpace(source.Artist) ? source.Artist : source.Uploader,
+            Album = source.Album,
+            Genre = source.Genre,
+            Year = source.Year,
+            TrackNumber = source.TrackNumber,
+            CoverArt = includeCoverArt ? source.ThumbnailData : null
+        };
+    }
+
+    private static bool HasEssentialMetadata(MediaMetadata metadata)
+    {
+        return !string.IsNullOrWhiteSpace(metadata.Title)
+            && !string.IsNullOrWhiteSpace(metadata.Artist);
+    }
+
+    private static MediaMetadata MergeMetadata(MediaMetadata current, MediaMetadata? enriched, bool includeCoverArt)
+    {
+        if (enriched is null)
+        {
+            return current;
+        }
+
+        return new MediaMetadata
+        {
+            Title = !string.IsNullOrWhiteSpace(current.Title) ? current.Title : enriched.Title,
+            Artist = !string.IsNullOrWhiteSpace(current.Artist) ? current.Artist : enriched.Artist,
+            Album = !string.IsNullOrWhiteSpace(current.Album) ? current.Album : enriched.Album,
+            Genre = !string.IsNullOrWhiteSpace(current.Genre) ? current.Genre : enriched.Genre,
+            Year = current.Year ?? enriched.Year,
+            TrackNumber = current.TrackNumber ?? enriched.TrackNumber,
+            CoverArt = includeCoverArt
+                ? (current.CoverArt is { Length: > 0 } ? current.CoverArt : enriched.CoverArt)
+                : null
+        };
     }
 
     private static Platform DetectPlatform(Uri uri)

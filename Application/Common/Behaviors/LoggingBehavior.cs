@@ -28,6 +28,12 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
             _logger.LogInformation("Successfully handled request: {RequestName}", requestName);
             return response;
         }
+        catch (OperationCanceledException)
+        {
+            // Cancellation is an expected control-flow signal, not an error.
+            _logger.LogWarning("Request cancelled: {RequestName}", requestName);
+            throw;
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error handling request: {RequestName}", requestName);

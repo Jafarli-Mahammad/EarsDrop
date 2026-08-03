@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EarsDrop")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4df367226adce84109b8070717b5bf985fbcfb9d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+17d3bd38b0a29c19dcd25622788f6d7fea8ba5ea")]
 [assembly: System.Reflection.AssemblyProductAttribute("EarsDrop")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EarsDrop")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

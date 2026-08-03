@@ -1,0 +1,16 @@
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/bin/Release/net10.0/Application.deps.json
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/bin/Release/net10.0/Application.dll
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/bin/Release/net10.0/Application.pdb
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/bin/Release/net10.0/Domain.dll
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/bin/Release/net10.0/Domain.pdb
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/obj/Release/net10.0/Application.csproj.AssemblyReference.cache
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/obj/Release/net10.0/Application.GeneratedMSBuildEditorConfig.editorconfig
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/obj/Release/net10.0/Application.AssemblyInfoInputs.cache
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/obj/Release/net10.0/Application.AssemblyInfo.cs
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/obj/Release/net10.0/Application.csproj.CoreCompileInputs.cache
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/obj/Release/net10.0/Application.sourcelink.json
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/obj/Release/net10.0/Applicat.44B5EDA2.Up2Date
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/obj/Release/net10.0/Application.dll
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/obj/Release/net10.0/refint/Application.dll
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/obj/Release/net10.0/Application.pdb
+/home/mahammadjafarli/RiderProjects/EarsDrop/Application/obj/Release/net10.0/ref/Application.dll

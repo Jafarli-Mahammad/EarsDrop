@@ -103,7 +103,22 @@ public class DownloadJobRepository : IDownloadJobRepository
         var rows = await connection.QueryAsync<DownloadJobRow>(
             new CommandDefinition(sql, cancellationToken: cancellationToken));
 
-        return rows.Select(MapToEntity).ToList();
+        // Map each row defensively: a single corrupt row (e.g. a malformed URL from a
+        // manual DB edit or a bad migration) must not fail retrieval of the whole history.
+        var jobs = new List<DownloadJob>();
+        foreach (var row in rows)
+        {
+            try
+            {
+                jobs.Add(MapToEntity(row));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Skipping corrupt download job row with Id '{Id}'", row.Id);
+            }
+        }
+
+        return jobs;
     }
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
@@ -139,7 +154,7 @@ public class DownloadJobRepository : IDownloadJobRepository
         };
     }
 
-    private static DownloadJob MapToEntity(DownloadJobRow row)
+    private DownloadJob MapToEntity(DownloadJobRow row)
     {
         var source = new MediaSource
         {
@@ -180,9 +195,10 @@ public class DownloadJobRepository : IDownloadJobRepository
                     job.AttachMetadata(metadata);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignore corrupt JSON metadata gracefully
+                // Ignore corrupt JSON metadata gracefully, but log it for diagnostics.
+                _logger.LogWarning(ex, "Ignoring corrupt JSON metadata for download job '{Id}'", row.Id);
             }
         }
 

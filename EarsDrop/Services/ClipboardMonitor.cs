@@ -3,111 +3,144 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
-using Avalonia.Input;
 using Avalonia.Input.Platform;
 
-namespace EarsDrop.Services;
-
-public interface IClipboardMonitor
+namespace EarsDrop.Services
 {
-    event EventHandler<string>? UrlDetected;
-    bool IsEnabled { get; set; }
-    void Start();
-    void Stop();
-}
-
-public sealed class ClipboardMonitor : IClipboardMonitor, IDisposable
-{
-    private static readonly Regex SupportedUrl = new(
-        @"^https?://(?:www\.)?(?:youtube\.com|youtu\.be|soundcloud\.com|bandcamp\.com|vimeo\.com)/\S+$",
-        RegexOptions.IgnoreCase | RegexOptions.Compiled);
-
-    private readonly PeriodicTimer _timer = new(TimeSpan.FromSeconds(1));
-    private CancellationTokenSource? _cancellation;
-
-    // Seeded to a non-null sentinel so the very first clipboard read never
-    // auto-fires for pre-existing clipboard content.
-    private string _lastText = string.Empty;
-
-    // Tracks whether the seed pass has happened. On first tick we silently
-    // record whatever is in the clipboard WITHOUT firing UrlDetected.
-    private bool _seeded;
-
-    public event EventHandler<string>? UrlDetected;
-    public bool IsEnabled { get; set; } = true;
-
-    public void Start()
+    public interface IClipboardMonitor
     {
-        if (_cancellation is not null) return;
-        _cancellation = new CancellationTokenSource();
-        _ = MonitorAsync(_cancellation.Token);
+        event EventHandler<string> UrlDetected;
+        bool IsEnabled { get; set; }
+        int PollIntervalMilliseconds { get; set; }
+        void Start();
+        void Stop();
     }
 
-    public void Stop()
+    public sealed class ClipboardMonitor : IClipboardMonitor, IDisposable
     {
-        _cancellation?.Cancel();
-        _cancellation?.Dispose();
-        _cancellation = null;
-    }
+        private static readonly Regex SupportedUrl = new(
+            @"^https?://(?:www\.)?(?:youtube\.com|youtu\.be|soundcloud\.com|bandcamp\.com|vimeo\.com)/\S+$",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-    private async Task MonitorAsync(CancellationToken token)
-    {
-        try
+        private const int RapidPollIntervalMilliseconds = 10;
+        private const int MinimumPollIntervalMilliseconds = 10;
+        private const int MaximumPollIntervalMilliseconds = 1000;
+
+        private CancellationTokenSource? _cancellation;
+        private readonly SemaphoreSlim _pollGate = new(1, 1);
+        private string _lastText = string.Empty;
+        private bool _seeded;
+        private DateTimeOffset _rapidPollingUntil = DateTimeOffset.MinValue;
+        private int _pollIntervalMilliseconds = 25;
+
+        public event EventHandler<string>? UrlDetected;
+
+        public bool IsEnabled { get; set; } = true;
+
+        public int PollIntervalMilliseconds
         {
-            while (await _timer.WaitForNextTickAsync(token))
-            {
-                if (!IsEnabled) continue;
+            get => _pollIntervalMilliseconds;
+            set => _pollIntervalMilliseconds = Math.Clamp(value, MinimumPollIntervalMilliseconds, MaximumPollIntervalMilliseconds);
+        }
 
-                var text = await Dispatcher.UIThread.InvokeAsync(async () =>
+        public void Start()
+        {
+            if (_cancellation is not null) return;
+            _cancellation = new CancellationTokenSource();
+            _ = MonitorAsync(_cancellation.Token);
+        }
+
+        public void Stop()
+        {
+            _cancellation?.Cancel();
+            _cancellation?.Dispose();
+            _cancellation = null;
+        }
+
+        private async Task MonitorAsync(CancellationToken token)
+        {
+            try
+            {
+                while (!token.IsCancellationRequested)
                 {
+                    var delay = GetCurrentDelay();
+                    if (delay > TimeSpan.Zero)
+                    {
+                        await Task.Delay(delay, token);
+                    }
+
+                    await _pollGate.WaitAsync(token);
                     try
                     {
-                        var lifetime = Avalonia.Application.Current?.ApplicationLifetime
-                            as IClassicDesktopStyleApplicationLifetime;
-                        var clipboard = TopLevel.GetTopLevel(lifetime?.MainWindow)?.Clipboard;
-                        if (clipboard is null)
-    return null;
+                        if (!IsEnabled)
+                            continue;
 
-using var data = await clipboard.TryGetDataAsync();
+                        var text = await ReadClipboardTextAsync();
 
-return data is null
-    ? null
-    : await data.TryGetTextAsync();
+                        if (string.IsNullOrWhiteSpace(text)) continue;
+
+                        var candidate = text.Trim();
+
+                        if (!_seeded)
+                        {
+                            // First observation: silently record current clipboard to prevent
+                            // firing on content that was there before the app opened.
+                            _lastText = candidate;
+                            _seeded = true;
+                            continue;
+                        }
+
+                        // Only fire when the clipboard *changes* to a new value.
+                        if (candidate == _lastText) continue;
+
+                        _lastText = candidate;
+                        _rapidPollingUntil = DateTimeOffset.UtcNow.AddMilliseconds(250);
+
+                        if (SupportedUrl.IsMatch(candidate))
+                        {
+                            await Dispatcher.UIThread.InvokeAsync(() => UrlDetected?.Invoke(this, candidate));
+                        }
                     }
-                    catch
+                    finally
                     {
-                        return null;
+                        _pollGate.Release();
                     }
-                });
-
-                if (string.IsNullOrWhiteSpace(text)) continue;
-
-                var candidate = text.Trim();
-
-                if (!_seeded)
-                {
-                    // First tick: silently record current clipboard to prevent
-                    // firing on content that was there before the app opened.
-                    _lastText = candidate;
-                    _seeded = true;
-                    continue;
                 }
+            }
+            catch (OperationCanceledException) { }
+        }
 
-                // Only fire when the clipboard *changes* to a new URL.
-                if (candidate == _lastText) continue;
+        private TimeSpan GetCurrentDelay()
+        {
+            var interval = PollIntervalMilliseconds;
+            if (DateTimeOffset.UtcNow < _rapidPollingUntil)
+                interval = Math.Min(interval, RapidPollIntervalMilliseconds);
 
-                _lastText = candidate;
+            return TimeSpan.FromMilliseconds(interval);
+        }
 
-                if (SupportedUrl.IsMatch(candidate))
-                    UrlDetected?.Invoke(this, candidate);
+        private static async Task<string?> ReadClipboardTextAsync()
+        {
+            try
+            {
+                var lifetime = Avalonia.Application.Current?.ApplicationLifetime
+                    as IClassicDesktopStyleApplicationLifetime;
+                var clipboard = TopLevel.GetTopLevel(lifetime?.MainWindow)?.Clipboard;
+                if (clipboard is null)
+                    return null;
+
+                return await clipboard.TryGetTextAsync();
+            }
+            catch
+            {
+                return null;
             }
         }
-        catch (OperationCanceledException) { }
-    }
 
-    public void Dispose()
-    {
-        Stop();
-        _timer.Dispose();
+        public void Dispose()
+        {
+            Stop();
+            _pollGate.Dispose();
+        }
     }
 }

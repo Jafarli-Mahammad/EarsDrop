@@ -26,7 +26,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IProcessRunner, ProcessRunner.ProcessRunner>();
 
         // Services
-        services.AddTransient<IMediaDownloader, YtDlpMediaDownloader>();
+        services.AddHttpClient<IMediaDownloader, YtDlpMediaDownloader>();
         services.AddTransient<IMediaConverter, FfmpegMediaConverter>();
         services.AddHttpClient<IMetadataProvider, MusicBrainzMetadataProvider>();
         services.AddTransient<IMetadataWriter, Mp3MetadataWriter>();

@@ -44,7 +44,10 @@ public class DataContext
         {
             DataSource = _databasePath,
             Mode = SqliteOpenMode.ReadWriteCreate,
-            Cache = SqliteCacheMode.Shared
+            Cache = SqliteCacheMode.Shared,
+            // Wait for locks instead of failing immediately with SQLITE_BUSY when
+            // multiple downloads write concurrently.
+            DefaultTimeout = 30
         }.ConnectionString;
 
         return new SqliteConnection(connectionString);
@@ -70,6 +73,11 @@ public class DataContext
 
             using var connection = CreateConnection();
             await connection.OpenAsync(cancellationToken);
+
+            // WAL journal mode allows concurrent readers while a writer is active,
+            // which suits a desktop app running multiple downloads in parallel.
+            await connection.ExecuteAsync(new CommandDefinition(
+                "PRAGMA journal_mode=WAL;", cancellationToken: cancellationToken));
 
             const string sql = """
                 CREATE TABLE IF NOT EXISTS DownloadJobs (

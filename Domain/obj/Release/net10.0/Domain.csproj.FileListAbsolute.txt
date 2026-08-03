@@ -1,0 +1,12 @@
+/home/mahammadjafarli/RiderProjects/EarsDrop/Domain/bin/Release/net10.0/Domain.deps.json
+/home/mahammadjafarli/RiderProjects/EarsDrop/Domain/bin/Release/net10.0/Domain.dll
+/home/mahammadjafarli/RiderProjects/EarsDrop/Domain/bin/Release/net10.0/Domain.pdb
+/home/mahammadjafarli/RiderProjects/EarsDrop/Domain/obj/Release/net10.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+/home/mahammadjafarli/RiderProjects/EarsDrop/Domain/obj/Release/net10.0/Domain.AssemblyInfoInputs.cache
+/home/mahammadjafarli/RiderProjects/EarsDrop/Domain/obj/Release/net10.0/Domain.AssemblyInfo.cs
+/home/mahammadjafarli/RiderProjects/EarsDrop/Domain/obj/Release/net10.0/Domain.csproj.CoreCompileInputs.cache
+/home/mahammadjafarli/RiderProjects/EarsDrop/Domain/obj/Release/net10.0/Domain.sourcelink.json
+/home/mahammadjafarli/RiderProjects/EarsDrop/Domain/obj/Release/net10.0/Domain.dll
+/home/mahammadjafarli/RiderProjects/EarsDrop/Domain/obj/Release/net10.0/refint/Domain.dll
+/home/mahammadjafarli/RiderProjects/EarsDrop/Domain/obj/Release/net10.0/Domain.pdb
+/home/mahammadjafarli/RiderProjects/EarsDrop/Domain/obj/Release/net10.0/ref/Domain.dll

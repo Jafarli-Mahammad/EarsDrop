@@ -25,15 +25,27 @@ public class CompleteDownloadHandler : IRequestHandler<CompleteDownloadCommand, 
     {
         _logger.LogInformation("Processing CompleteDownloadCommand for JobId: {JobId}", request.JobId);
 
-        var job = await _jobRepository.GetByIdAsync(request.JobId, cancellationToken);
-        if (job == null)
+        try
         {
-            return Result<DownloadJobDto>.Failure(Error.NotFound);
+            var job = await _jobRepository.GetByIdAsync(request.JobId, cancellationToken);
+            if (job == null)
+            {
+                return Result<DownloadJobDto>.Failure(Error.NotFound);
+            }
+
+            job.Complete();
+            await _jobRepository.UpdateAsync(job, cancellationToken);
+
+            return Result<DownloadJobDto>.Success(job.ToDto());
         }
-
-        job.Complete();
-        await _jobRepository.UpdateAsync(job, cancellationToken);
-
-        return Result<DownloadJobDto>.Success(job.ToDto());
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to complete download job {JobId}", request.JobId);
+            return Result<DownloadJobDto>.Failure(Error.Custom("Download.CompleteFailed", ex.Message));
+        }
     }
 }

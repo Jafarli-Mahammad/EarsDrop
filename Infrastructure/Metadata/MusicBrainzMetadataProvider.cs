@@ -53,8 +53,8 @@ public class MusicBrainzMetadataProvider : IMetadataProvider
                 ? $"recording:\"{searchTrack}\" AND artist:\"{searchArtist}\""
                 : $"recording:\"{searchTrack}\"";
 
-            var requestUrl = $"recording?query={Uri.EscapeDataString(query)}&fmt=json&limit=5";
-            var response = await _httpClient.GetAsync(requestUrl, cancellationToken);
+            var requestUrl = $"recording?query={Uri.EscapeDataString(query)}&fmt=json&limit=1";
+            var response = await _httpClient.GetAsync(requestUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -140,6 +140,11 @@ public class MusicBrainzMetadataProvider : IMetadataProvider
                 metadata.CoverArt = await DownloadCoverArtAsync(releaseId, cancellationToken);
             }
         }
+        catch (OperationCanceledException)
+        {
+            // Honor cooperative cancellation instead of degrading to fallback metadata.
+            throw;
+        }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Failed to retrieve full MusicBrainz metadata for '{Title}'. Using fallback.", source.Title);
@@ -162,6 +167,10 @@ public class MusicBrainzMetadataProvider : IMetadataProvider
             {
                 return await response.Content.ReadAsByteArrayAsync(cancellationToken);
             }
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {

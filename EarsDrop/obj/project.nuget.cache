@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "3ZbthPrftno=",
+  "dgSpecHash": "rEHMvQqCDeo=",
   "success": true,
   "projectFilePath": "/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/EarsDrop.csproj",
   "expectedPackageFiles": [
@@ -31,8 +31,8 @@
     "/home/mahammadjafarli/.nuget/packages/mediatr/14.2.0/mediatr.14.2.0.nupkg.sha512",
     "/home/mahammadjafarli/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
     "/home/mahammadjafarli/.nuget/packages/microcom.runtime/0.11.6/microcom.runtime.0.11.6.nupkg.sha512",
-    "/home/mahammadjafarli/.nuget/packages/microsoft.data.sqlite/10.0.0/microsoft.data.sqlite.10.0.0.nupkg.sha512",
-    "/home/mahammadjafarli/.nuget/packages/microsoft.data.sqlite.core/10.0.0/microsoft.data.sqlite.core.10.0.0.nupkg.sha512",
+    "/home/mahammadjafarli/.nuget/packages/microsoft.data.sqlite/10.0.10/microsoft.data.sqlite.10.0.10.nupkg.sha512",
+    "/home/mahammadjafarli/.nuget/packages/microsoft.data.sqlite.core/10.0.10/microsoft.data.sqlite.core.10.0.10.nupkg.sha512",
     "/home/mahammadjafarli/.nuget/packages/microsoft.extensions.configuration/10.0.10/microsoft.extensions.configuration.10.0.10.nupkg.sha512",
     "/home/mahammadjafarli/.nuget/packages/microsoft.extensions.configuration.abstractions/10.0.10/microsoft.extensions.configuration.abstractions.10.0.10.nupkg.sha512",
     "/home/mahammadjafarli/.nuget/packages/microsoft.extensions.configuration.binder/10.0.10/microsoft.extensions.configuration.binder.10.0.10.nupkg.sha512",
@@ -58,25 +58,12 @@
     "/home/mahammadjafarli/.nuget/packages/skiasharp.nativeassets.macos/3.119.4/skiasharp.nativeassets.macos.3.119.4.nupkg.sha512",
     "/home/mahammadjafarli/.nuget/packages/skiasharp.nativeassets.webassembly/3.119.4/skiasharp.nativeassets.webassembly.3.119.4.nupkg.sha512",
     "/home/mahammadjafarli/.nuget/packages/skiasharp.nativeassets.win32/3.119.4/skiasharp.nativeassets.win32.3.119.4.nupkg.sha512",
-    "/home/mahammadjafarli/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/2.1.11/sqlitepclraw.bundle_e_sqlite3.2.1.11.nupkg.sha512",
-    "/home/mahammadjafarli/.nuget/packages/sqlitepclraw.core/2.1.11/sqlitepclraw.core.2.1.11.nupkg.sha512",
-    "/home/mahammadjafarli/.nuget/packages/sqlitepclraw.lib.e_sqlite3/2.1.11/sqlitepclraw.lib.e_sqlite3.2.1.11.nupkg.sha512",
-    "/home/mahammadjafarli/.nuget/packages/sqlitepclraw.provider.e_sqlite3/2.1.11/sqlitepclraw.provider.e_sqlite3.2.1.11.nupkg.sha512",
+    "/home/mahammadjafarli/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/2.1.12/sqlitepclraw.bundle_e_sqlite3.2.1.12.nupkg.sha512",
+    "/home/mahammadjafarli/.nuget/packages/sqlitepclraw.core/2.1.12/sqlitepclraw.core.2.1.12.nupkg.sha512",
+    "/home/mahammadjafarli/.nuget/packages/sqlitepclraw.lib.e_sqlite3/2.1.12/sqlitepclraw.lib.e_sqlite3.2.1.12.nupkg.sha512",
+    "/home/mahammadjafarli/.nuget/packages/sqlitepclraw.provider.e_sqlite3/2.1.12/sqlitepclraw.provider.e_sqlite3.2.1.12.nupkg.sha512",
     "/home/mahammadjafarli/.nuget/packages/taglibsharp/2.3.0/taglibsharp.2.3.0.nupkg.sha512",
     "/home/mahammadjafarli/.nuget/packages/tmds.dbus.protocol/0.94.1/tmds.dbus.protocol.0.94.1.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1903",
-      "level": "Warning",
-      "message": "Package 'SQLitePCLRaw.lib.e_sqlite3' 2.1.11 has a known high severity vulnerability, https://github.com/advisories/GHSA-2m69-gcr7-jv3q",
-      "projectPath": "/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/EarsDrop.csproj",
-      "warningLevel": 1,
-      "filePath": "/home/mahammadjafarli/RiderProjects/EarsDrop/EarsDrop/EarsDrop.csproj",
-      "libraryId": "SQLitePCLRaw.lib.e_sqlite3",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    }
-  ]
+  "logs": []
 }

@@ -12,7 +12,10 @@
 
     <ItemGroup>
       <PackageReference Include="Dapper" Version="2.1.79" />
-      <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
+      <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.10" />
+      <!-- Pin the patched native SQLite bundle to resolve GHSA-2m69-gcr7-jv3q (NU1903);
+           Microsoft.Data.Sqlite otherwise pulls the vulnerable 2.1.11 transitively. -->
+      <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.12" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
       <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
       <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0" />

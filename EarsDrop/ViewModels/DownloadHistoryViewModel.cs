@@ -22,7 +22,7 @@ public partial class DownloadHistoryViewModel : ViewModelBase
     private bool Matches(Application.DTOs.DownloadJobDto dto) => string.IsNullOrWhiteSpace(SearchText) || dto.Source.Title.Contains(SearchText, StringComparison.OrdinalIgnoreCase) || dto.Source.Uploader.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
     [RelayCommand] private async Task DeleteAsync(DownloadCardViewModel item) { var result = await _sender.Send(new DeleteDownloadCommand(item.Id)); if (result.IsSuccess) Items.Remove(item); }
     [RelayCommand] private async Task RetryAsync(DownloadCardViewModel item)
-    { var result = await _sender.Send(new RetryDownloadCommand(item.Id)); if (result.IsSuccess) { var index = Items.IndexOf(item); Items[index] = DownloadCardViewModel.FromDto(result.Value); } }
+    { var result = await _sender.Send(new RetryDownloadCommand(item.Id)); if (result.IsSuccess) { var index = Items.IndexOf(item); if (index >= 0) Items[index] = DownloadCardViewModel.FromDto(result.Value); } }
     [RelayCommand] private void OpenFolder(DownloadCardViewModel item) { if (!string.IsNullOrWhiteSpace(item.OutputPath)) _notifications.OpenFileLocation(item.OutputPath); }
     partial void OnSearchTextChanged(string value) => _ = RefreshAsync();
 }

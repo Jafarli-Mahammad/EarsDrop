@@ -13,15 +13,26 @@ internal sealed class Program
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
     [STAThread]
-    public static void Main(string[] args) => BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
+    public static void Main(string[] args)
+    {
+        // Headless backend verification mode (useful for CI/headless environments):
+        // Run with: dotnet run -- --verify-backend
+        if (args != null && args.Any(a => string.Equals(a, "--verify-backend", StringComparison.OrdinalIgnoreCase)))
+        {
+            var ok = BackendVerification.RunVerificationAsync().GetAwaiter().GetResult();
+            Environment.ExitCode = ok ? 0 : 1;
+            return;
+        }
+
+        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+    }
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
 #if DEBUG
-            .WithDeveloperTools()
+            /*.WithDeveloperTools()*/
 #endif
             .WithInterFont()
             .LogToTrace();

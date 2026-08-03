@@ -75,7 +75,15 @@ public class ProcessRunner : IProcessRunner
                 if (!process.HasExited)
                 {
                     process.Kill(entireProcessTree: true);
+                    // Wait (without the cancelled token) for the process to actually exit so the
+                    // async stdout/stderr readers quiesce before the process is disposed, avoiding
+                    // ObjectDisposedException / interleaved callbacks during disposal.
+                    await process.WaitForExitAsync(CancellationToken.None);
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {

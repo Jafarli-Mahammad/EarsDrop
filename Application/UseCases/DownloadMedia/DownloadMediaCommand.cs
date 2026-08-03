@@ -7,4 +7,7 @@ namespace Application.UseCases.DownloadMedia;
 
 public record DownloadMediaCommand(
     string Url,
-    OutputFormat OutputFormat = OutputFormat.Mp3) : IRequest<Result<DownloadJobDto>>;
+    OutputFormat OutputFormat = OutputFormat.Mp3,
+    bool EnableMetadataEnrichment = false,
+    bool EnableCoverArtEmbedding = true,
+    bool EnableTagWriting = true) : IRequest<Result<DownloadJobDto>>;

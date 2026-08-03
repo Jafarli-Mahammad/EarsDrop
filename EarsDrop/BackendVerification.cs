@@ -43,7 +43,7 @@ public static class BackendVerification
             Console.WriteLine($"[2/5] Dispatching DownloadMediaCommand for URL: {testUrl}");
             var mediator = serviceProvider.GetRequiredService<IMediator>();
 
-            var command = new DownloadMediaCommand(testUrl, Domain.Enums.OutputFormat.Mp3);
+            var command = new DownloadMediaCommand(testUrl, Domain.Enums.OutputFormat.Mp3, EnableMetadataEnrichment: false);
             var result = await mediator.Send(command);
 
             if (result.IsSuccess)
